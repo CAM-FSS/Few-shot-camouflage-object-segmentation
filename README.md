@@ -1,5 +1,5 @@
 4月21日：
-上传演讲PPT
+上传演讲PPT,上传COD-FSS的测试集（Upload PPT, upload COD-FSS test dateset）
 #
 3月15日：
 accept by IJCNN 2024
