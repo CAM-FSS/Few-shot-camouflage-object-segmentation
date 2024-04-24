@@ -1,0 +1,65 @@
+[Slide 1: ]
+Hello,everyone, thank you for joining today's session. My name is ... from Hubei university in China and I am here to talk about my paper ,which was accepted at ijcnn2024,named as "Few-Shot Camouflaged Object Segmentation ".so let us begin.
+[Slide 2: ]
+Let¡¯s first look at the picture in the lower left corner. Can you find all the birds in the picture?
+5 seconds,5,4,3,2,1,ok,the answer is on the next page.Look at the answers.
+[Slide 3:]. How many birds did you find?Now I think you all know what a camouflage object is. Camouflage object segmentation is to segment the bird in the picture just now . Camouflage object segmentation ,called COS ,plays a key role in various domains, such as medical diagnosis , military operations, agriculture applications , and industrial quality control.Let¡¯s look at the picture on the lower right,Polyp segmentation, object defect detection, medical image detection, etc.
+[Slide 2: ]
+In recent years, computers have developed rapidly,COS has gained significant attention in computer vision due to its many uses.Thanks to the work of these outstanding researchers, many excellent works have appeared in this field.But In the field of Camouflaged Object Segmentation (COS), traditional techniques heavily rely on supervised learning, which requires extensive labeled datasets. This dependency can be a limitation as these methods often struggle to accurately segment unseen classes.ok ,Unsupervised may come to mind at this point.However,Advanced unsupervised models (like SAM) face difficulties in segmenting camouflaged objects
+[Slide 3: ]
+simultaneously,the limited diversity in public COS datasets restricts their applicability in complex real-world scenarios.
+[Slide 4: ]
+So how can we solve these problems? In my article, we introduce an idea:few shot learning(FSL).FSL, a subfield of meta-learning, is designed to replicate the human capability of quickly learning from limited examples.To give a simple example, a child goes to the zoo and there are some animals that he has never seen before so he doesn¡¯t know their names. Then you give him some small cards with photos and names of each animal. The child can learn by himself. Find the names of these animals in these cards. The unknown animal here is called query, and the small card is called support set. Cultivating children to learn independently from small cards is called meta learning. If there is only one small card of a category, it is called one-shot learning.
+How to implement it in computer? The query sample has never been seen before. The query sample comes from an unknown category. Since the query does not appear in the training set.We can look at the middle illustration.The support set and the query set become feature maps by sharing backbone network, and then based on the metric function, the support set information guides the query set, and finally our prediction is given.In a word ,quickly adapting to new  tasks with few examples.In FSL applications, metric-based methods are particularly prevalent,accounting for about 50% of the approaches.
+[Slide 5: ]
+But how to introduce the idea of few shot learning? The existing few shot segmentation gives us examples.But existing few shot segmentation is not ideal in processing camouflage images because the front and rear background of the camouflage image is not easy to distinguish.So,a key focus of our work is how to extract fine-grained information from the support set.
+The second challenge comes from the data set.The existing COS public datasets cannot be directly applied to few-shot scenarios due to the imbalance of classes.
+For the first challenge:
+We can see that is an overview of our model in the middle illustration. Formally similar to the FSL framework we just talked about.To extract valuable information from the support set and ensure the model¡¯s proficiency in segmenting camouflage images, we designed two primary modules within CAMFS:
+the Camouflaged-Meta module and the Camouflaged-Base module. The Camouflaged-Meta module converts semantic information of camouflage targets into compact feature vectors, facilitating the transfer of knowledge from support images to the target category. 
+Concurrently, the Camouflaged-Base module concentrates on capturing crucial edge details to enrich the distinction between foreground and background elements, thus improving the segmentation performance.
+[Slide 6: ]
+We can see this is a illustration, provided an overview of the CAMFS architecture.Due to time constraints, I will keep the story short and only describe the general process. The specific formulas and steps can be found in the paper.
+
+We first see 1,2,3,4, which means the shared backbone. This article uses resnet-50. As the number of layers deepens, the focus of the features changes.There is a lot of noise in the early feature map. Therefore, we use 2,3 and 4 as inputs to PFM. This module is used to refine the features. At the same time, we enter the MS module.we further subdivide all feature maps into each bottleneck .The feature map of bottleneck of the support set  do average mask pooling , and cosine similarity is performed with each bottleneck of the query set for knowledge guidance.We feed the features of the last layer into the PFE module to generate prediction masks (mpr) .We simultaneously preserve the original extracted features.
+We simultaneously preserve the original extracted features. Mask average pooling is performed together with the output of PFM.Finally we concat these outputs and perform ASPP for feature enhancement.this is GMLN.and CBLD,The CBLD functions to enhance the details of the target mask by extracting edge information from camouflaged objects.
+The CBLD functions to enhance the details of the target mask by extracting edge information from camouflaged objects.
+First,EAM is used to generate predicted mask edges,and Edge-Guided Feature Refinement Module (EFR),EFR needs to accept the prediction mask edges of EMA and the 2 and 3 layer feature maps of the query set.EFR continuously refines edges. we term the Multi-Scale Feature Fusion Module (MFM).Mask produced by MFM.
+
+[Slide 7: ]
+How to extract fine-grained information from the support set?
+we employ a branching strategy for processing these features to effectively capture camouflage details while preserving the integrity of original features, The primary branch includes the Positioning and Focusing Module.
+we use 2 ,3,4 as inputs to PFM,The PFM (Positioning and Focusing Module) enhances detailed feature extraction of camouflaged objects. It processes feature maps through a branching strategy, employs depthwise convolution to reduce channels, and uses iterative 
+Positioning and Focusing techniques to enrich feature representation, boosting the detection of camouflaged targets.
+
+[Slide 8: ]
+The second challenge comes from the data set.
+We selected 18 categories with the highest image counts from COD10K and further augmented these categories to approximately 250 images each. Additionally, to incorporate diversity and address the lack of military camouflage images in COD10K, we included about 1000 images of  military camouflage (tanks and soldiers).
+Histogram left displays the distribution of samples within the 18 classes having the largest number of images in the COD10K dataset, while Histogram right illustrates the sample distribution across the 20 classes within our COS-FSS dataset.
+[Slide 9: ]
+The CAMFS framework employs the ResNet-50 model. RTX 4090 was utilized,The optimizer is SGD.
+We can see that compared with the existing semantic segmentation models in the table below, we are far better than the existing general semantic segmentation models.
+[Slide 10:]
+The CAMFS model¡¯s efficacy is evaluated on the complete COS-FSS dataset, consisting of 5322 images. The dataset is divided, allocating 4216 images from the latter 15 classes for training and 1106 images from the initial 5 classes for testing. The training follows the traditional episodic training paradigm, enabling the model to achieve effective segmentation on unseen data from the first 5 classes.Training is executed under a one-shot condition (K=1), where a single image from the support set guides the segmentation process for the query image.
+We compared the existing FSS models and COS models, and experiments showed that our model has the best performance.
+[Slide 11: ]
+These are comparison pictures,I will stay for 5 seconds and everyone can take a look.We are the best.
+[Slide 12: ]
+Finally, thank you to everyone who heard this and didn¡¯t go away. Let me sum up our work.
+Our primary contributions are summarized as follows: 
+? We conduct the first study to introduce few-shot learning into the field of COS.This pioneering approach significantly reduces the reliance on extensive labeled datasets typically required for COS tasks and enhances the model¡¯s capacity for generalization. 
+
+? We introduce a CAMFS framework, which includes two novel modules: Camouflaged-Meta and Camouflaged-Base. These modules are designed to ensure effective identification of unseen camouflaged samples using support images. 
+
+? We develop COS-FSS, a novel public benchmark dataset,representing the first few-shot camouflage object image segmentation dataset. 
+
+? Resource:The dataset and additional resources are available at (https://github.com/CAM-FSS/FSS- COD). 
+
+Future work: 
+? Future research directions include enhancing the model¡¯s ability for fine-grained segmentation of small-scale targets within images, further advancing the field of COS
+[Slide 13: ]
+ Thank you for your listening.
+
+
+
+
