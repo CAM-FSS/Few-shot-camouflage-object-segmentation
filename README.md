@@ -2,7 +2,7 @@
 上传演讲稿讲解:gpl.txt
 #
 4月21日：
-上传演讲PPT,上传COD-FSS的测试集（Upload PPT, upload COD-FSS test dateset） 链接：https://pan.baidu.com/s/1crdA8W2lKi_aK6RxCxdhWA?pwd=2024  提取码：2024  ,标签在上面的label_val里
+上传演讲PPT:ijcnnptt.pdf.上传COD-FSS的测试集（Upload PPT, upload COD-FSS test dateset） 链接：https://pan.baidu.com/s/1crdA8W2lKi_aK6RxCxdhWA?pwd=2024  提取码：2024  ,标签在上面的label_val里
 #
 3月15日：
 accept by IJCNN 2024
